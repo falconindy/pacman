@@ -1,0 +1,179 @@
+expac(1)
+=========
+
+Name
+----
+expac - alpm data extraction utility
+
+Synopsis
+--------
+'expac' <format> <targets...> [options]
+
+Description
+-----------
+expac is a data extraction tool for alpm databases. It features printf-like
+flexibility and aims to be used as a simple tool for other pacman based
+utilities which don't link against the library. It uses pacman.conf as a config
+file for locating and loading your local and sync databases.
+
+Invoking expac consists of supplying a format string, which is generally
+described by one to many of the formatting tokens (see the 'FORMATTING'
+section), any relevant options and zero to many targets. The format string
+'must' be the first non-option argument. Targets can be a simple package name,
+a query string (in the case of a search), or in repo/package syntax when the
+-sync option is supplied.
+
+
+Options
+-------
+*-Q, \--query*::
+	Search the local database for provided targets. This is the default behavior.
+
+*-S, \--sync*::
+	Search the sync databases for provided targets.
+
+*-s, --search*::
+	Search for packages matching the strings specified by targets. This is a
+	boolean AND query and regex is allowed.
+
+*-g, --group*::
+	Return packages matching the specified targets as package groups.
+
+*\--config* <file>::
+	Read from <file> for alpm initialization instead of </etc/pacman.conf>.
+
+*-H, \--humansize* <size>::
+	Format package sizes in SI units according to <size>. Valid options are:
++
+B, K, M, G, T, P, E, Z, Y
+
+*-1, \--readone*::
+	Stop searching after the first result. This only has an effect on -S operations
+	without -s.
+
+*-d, \--delim <string>*::
+	Separate each package with the specified <string>. The default value is a
+	newline character.
+
+*-l, \--listdelim* <string>::
+	Separate each list item with the specified <string>. Lists are any interpreted
+	sequence specified with a capital letter. The default value is two spaces.
+
+*-p, \--file*::
+	Interpret targets as paths to local files.
+
+*-t, \--timefmt* <format>::
+	Output time described by the specified <format>. This string is passed directly
+	to linkman:strftime[3]. The default format is %c.
+
+*-v, \--verbose*::
+	Output more. `Package not found' errors will be shown, and empty field values
+	will display as 'None'.
+
+*-h, \--help*::
+
+Display the help message.
+
+*-V, \--version*::
+
+Display version information.
+
+Formatting
+----------
+
+The format argument allows the following interpreted sequences:
+
+  %B    backup files
+
+  %C    conflicts with (no version strings)
+
+  %D    depends on
+
+  %E    depends on (no version strings)
+
+  %F    files (only with -Q)
+
+  %G    groups
+
+  %H    conflicts with
+
+  %L    licenses
+
+  %N    required by
+
+  %O    optional deps
+
+  %o    optional deps (no descriptions)
+
+  %P    provides
+
+  %R    replaces (no version strings)
+
+  %T    replaces
+
+  %S    provides (no version strings)
+
+  %a    architecture
+
+  %b    build date
+
+  %d    description
+
+  %e    package base
+
+  %f    filename (only with -S)
+
+  %g    base64 encoded PGP signature (only with -S)
+
+  %h    sha256sum
+
+  %V    package validation method
+
+  %i    has install scriptlet (only with -Q)
+
+  %k    download size (only with -S)
+
+  %l    install date (only with -Q)
+
+  %m    install size
+
+  %M    modified backup files (only with -Q)
+
+  %n    package name
+
+  %p    packager name
+
+  %r    repo
+
+  %s    md5sum
+
+  %u    project URL
+
+  %v    version
+
+  %w    install reason (only with -Q)
+
+  %!    result number (auto-incremented counter, starts at 0)
+
+  %%    literal %
+
+Note that for any lowercase tokens aside from %m and %k, full printf support is
+allowed, e.g. %-20n. This does not apply to any list based, date, or numerical
+output.
+
+Standard backslash escape sequences are supported, as per linkman:printf[1].
+
+Examples
+--------
+
+expac -Ss \'%r/%n %v\n    %d\' <search terms>::
+	Emulate pacman\'s search function.
+
+expac --timefmt=%s \'%b\t%n\' | sort -n | head -10::
+	List the oldest 10 installed packages (by build date).
+
+See Also
+--------
+linkman:libalpm[3], linkman:pacman.conf[5]
+
+include::footer.asciidoc[]

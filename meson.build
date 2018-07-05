@@ -369,6 +369,14 @@ executable(
   install : true,
 )
 
+executable(
+  'expac',
+  expac_sources,
+  include_directories : includes,
+  link_with : [libalpm, libcommon],
+  install : true,
+)
+
 foreach wrapper : script_wrappers
   cdata = configuration_data()
   cdata.set_quoted('BASH', BASH.path())

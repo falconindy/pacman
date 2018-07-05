@@ -21,3 +21,10 @@ pacman_conf_sources = files('''
   callback.h callback.c
   conf.h conf.c
 '''.split())
+
+expac_sources = files('''
+  expac.c
+  util.h util.c
+  callback.h callback.c
+  conf.h conf.c
+'''.split())
